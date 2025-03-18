@@ -63,7 +63,7 @@ modal secret create huggingface-secret-smehmood --env-file .env
 Download a model from Hugging Face to a Modal volume:
 
 ```bash
-python benchmark.py download meta-llama/Llama-2-7b-chat-hf
+python benchmark.py --action download --model-name meta-llama/Llama-2-7b-chat-hf
 ```
 
 ### Running the MMLU Benchmark
@@ -71,7 +71,7 @@ python benchmark.py download meta-llama/Llama-2-7b-chat-hf
 Run the MMLU benchmark on a previously downloaded model:
 
 ```bash
-python benchmark.py benchmark meta-llama/Llama-2-7b-chat-hf
+python benchmark.py --action benchmark --model-name meta-llama/Llama-2-7b-chat-hf
 ```
 
 Note: If the model hasn't been downloaded yet, you'll be prompted to download it first.
