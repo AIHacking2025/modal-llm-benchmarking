@@ -1,0 +1,17 @@
+[project]
+name = "modal-llm-benchmarking"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "accelerate>=1.5.2",
+    "huggingface-hub>=0.29.3",
+    "lm-eval>=0.4.8",
+    "modal>=0.73.112",
+    "peft>=0.14.0",
+    "python-dotenv>=1.0.1",
+    "safetensors>=0.5.3",
+    "torch>=2.6.0",
+    "transformers>=4.49.0",
+]
