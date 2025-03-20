@@ -1,6 +1,5 @@
 import os
 import json
-import argparse
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any
@@ -10,11 +9,12 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import login
 from lm_eval import evaluator
 from lm_eval.models.huggingface import HFLM
-from lm_eval.tasks import get_task_dict
+from lm_eval.models.vllm_causallms import VLLM
+from lm_eval.loggers import WandbLogger
+import numpy as np
 
 # Create Modal volumes for storing models and results
 models_volume = Volume.from_name("models", create_if_missing=True)
-results_volume = Volume.from_name("results", create_if_missing=True)
 
 # Define the app
 app = App("llm-benchmarking")
@@ -23,7 +23,8 @@ app = App("llm-benchmarking")
 image = Image.debian_slim().pip_install(
     "transformers",
     "huggingface_hub",
-    "lm-eval",
+    "lm-eval[wandb,vllm]",
+    "numpy",
 )
 
 @app.function(
@@ -63,17 +64,17 @@ def download_model(model_name: str) -> str:
 
 @app.function(
     image=image,
-    volumes={
-        "/models": models_volume,
-        "/results": results_volume
-    },
-    secrets=[Secret.from_name("huggingface-secret-smehmood")],
-    gpu="A10G",
-    timeout=60*60,  # 1 hour timeout
+    volumes={ "/models": models_volume },
+    secrets=[
+        Secret.from_name("huggingface-secret-smehmood"),
+        Secret.from_name("wandb-secret-smehmood"),
+    ],
+    gpu="L40S",
+    timeout=60*60, 
 )
-def run_mmlu_benchmark(model_name: str) -> Dict[str, Any]:
+def run_benchmark(model_name: str, task: str) -> Dict[str, Any]:
     """
-    Run MMLU benchmark on a given model.
+    Run benchmark on a given model.
     
     Args:
         model_name: The name of the HuggingFace model to evaluate
@@ -81,30 +82,33 @@ def run_mmlu_benchmark(model_name: str) -> Dict[str, Any]:
     Returns:
         Dictionary containing the benchmark results
     """    
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
     # Check if model exists in volume, if not download it
     model_dir = Path(f"/models/{model_name}")
     if not model_dir.exists():
+        download_model.remote(model_name)
         print(f"Model {model_name} not found in volume. Download it first (using a function that doesn't have an expensive GPU attached to it)")
     
     print(f"Loading model from {model_dir}")
     
     # Set up the model for evaluation
-    model = HFLM(
+    model = VLLM(
         pretrained=str(model_dir),
         device="cuda",
-        batch_size=4
+        batch_size="auto",
+        max_length=8192,
+        trust_remote_code=True,
+        gpu_memory_utilization=0.90,
     )
     
-    # Configure MMLU benchmark
-    TASK = "mmlu"
-    task_dict = get_task_dict([TASK])
     
     # Run the benchmark
-    print(f"Running MMLU benchmark on {model_name}...")
-    results = evaluator.evaluate(
-        lm=model,
-        task_dict=task_dict,
-        limit=10,
+    print(f"Running {task} benchmark on {model_name}...")
+    results = evaluator.simple_evaluate(
+        model=model,
+        tasks=[task],
+        limit=None,
+        num_fewshot=5,
     )
     
     # Create results directory if it doesn't exist
@@ -113,25 +117,30 @@ def run_mmlu_benchmark(model_name: str) -> Dict[str, Any]:
     
     # Save results
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    result_file = results_dir / f"{TASK}_{timestamp}.json"
-    
-    with open(result_file, "w") as f:
-        json.dump(results, f, indent=2)
-    
-    print(f"Results saved to {result_file}")
-    print("\nMMLU Benchmark Results:")
-    print(json.dumps(results, indent=2))
-    
+    result_file = results_dir / f"{task}_{timestamp}.json"
+
+    wandb_logger = WandbLogger(
+        project="ai-hacking-2025", job_type="eval", name = f"{model_name}_{task}_{timestamp}"
+    )  
+    wandb_logger.post_init(results)
+    wandb_logger.log_eval_result()
+    wandb_logger.log_eval_samples(results["samples"]) 
+
     return results
 
+
 @app.local_entrypoint()
-def main(action: str, model_name: str):
+def main(action: str, model_name: str, task: str = None):
     """
     Local entrypoint for the Modal app.
     """
     if action == "download":
         download_model.remote(model_name)
     elif action == "benchmark":
-        run_mmlu_benchmark.remote(model_name)
+        run_benchmark.remote(model_name, task)
+    elif action == "experiment":
+        args = [(model_name, tsk) for tsk in ["mmlu_high_school_physics", "mmlu_stem", "mmlu"]]
+        results = run_benchmark.starmap(args, order_outputs=False)
+        print(list(results))
     else:
         print("Invalid action") 
