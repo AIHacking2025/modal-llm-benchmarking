@@ -76,6 +76,43 @@ python benchmark.py --action benchmark --model-name meta-llama/Llama-2-7b-chat-h
 
 Note: If the model hasn't been downloaded yet, you'll be prompted to download it first.
 
+### Running vLLM Inference
+
+The repository includes a script for running inference using vLLM on Modal's infrastructure. You can use it to deploy a model for inference or serve it locally:
+
+#### Deploying a Model
+
+Deploy a model to Modal:
+
+```bash
+python scripts/vllm_inference.py deploy MODEL_NAME [OPTIONS]
+```
+
+#### Serving a Model Locally
+
+Serve a model with an ephemeral app (and hot reloading of code) for inference:
+
+```bash
+python scripts/vllm_inference.py serve MODEL_NAME [OPTIONS]
+```
+
+#### Common Options
+
+Both commands support the following options:
+
+- `--GPU`: GPU type (A100, L4, L40S:4, etc.)
+- `--concurrent-inputs`: Number of concurrent inputs
+- `--scaledown-window`: Scaledown window in seconds
+- `--vllm-port`: Port for vLLM server
+- `--max-generation-length`: Maximum number of tokens to generate
+- `--dry-run`: Print the command that would be run without executing it
+
+Example:
+
+```bash
+python scripts/vllm_inference.py deploy meta-llama/Llama-2-7b-chat-hf --GPU A100 --concurrent-inputs 4
+```
+
 ## How It Works
 
 This project leverages Modal's cloud infrastructure to:
