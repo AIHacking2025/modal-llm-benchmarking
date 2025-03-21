@@ -317,9 +317,9 @@ def load_gmail_dataset():
 
 
 TRAINERS = {
-    "Qwen2.5-7B-grade-school-math": HFTrainer(
-        output_name="Qwen2.5-7B-grade-school-math",
-        base_model="Qwen/Qwen2.5-7B",
+    "Qwen2.5-3B-grade-school-math": UnslothTrainer(
+        output_name="Qwen2.5-3B-grade-school-math",
+        base_model="Qwen/Qwen2.5-3B-Instruct",
         dataset="qwedsacf/grade-school-math-instructions",
         dataset_formatter=lambda examples, eos_token: [
             f"Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n"
@@ -329,20 +329,14 @@ TRAINERS = {
                 examples["INSTRUCTION"], examples["RESPONSE"]
             )
         ],
+        training_args={
+            "lora_alpha": 16,
+            "lora_dropout": 0.1,
+        },
     ),
-    "Qwen2.5-0.5B-fake-news": HFTrainer(
-        output_name="Qwen2.5-0.5B-fake-news",
-        base_model="Qwen/Qwen2.5-0.5B",
-        dataset="noahgift/fake-news",
-        dataset_formatter=lambda examples, eos_token: [
-            f"Write a news article based on the following title:\n\n"
-            f"Title: {title}\n\nText: {text}" + eos_token
-            for title, text in zip(examples["title"], examples["text"])
-        ],
-    ),
-    "Qwen2.5-0.5B-fake-news-unsloth": UnslothTrainer(
-        output_name="Qwen2.5-0.5B-fake-news-unsloth",
-        base_model="Qwen/Qwen2.5-0.5B",
+    "Qwen2.5-3B-fake-news-unsloth": UnslothTrainer(
+        output_name="Qwen2.5-3B-fake-news-unsloth",
+        base_model="Qwen/Qwen2.5-3B",
         dataset="noahgift/fake-news",
         dataset_formatter=lambda examples, eos_token: [
             f"Write a news article based on the following title:\n\n"
@@ -353,8 +347,8 @@ TRAINERS = {
             "lora_alpha": 16,
             "lora_dropout": 0.1,
             "learning_rate": 1e-4,
-            "rank_dimension": 64,
-            "num_train_epochs": 4,
+            "rank_dimension": 16,
+            "num_train_epochs": 1,
         },
     ),
     "Qwen2.5-7B-platypus": HFTrainer(
@@ -371,7 +365,7 @@ TRAINERS = {
     "Qwen2.5-3B-farming": UnslothTrainer(
         # Model tuned with farming instructions and information.
         output_name="Qwen2.5-3B-farming",
-        base_model="Qwen/Qwen2.5-3B",
+        base_model="Qwen/Qwen2.5-3B-Instruct",
         dataset="argilla/farming",
         dataset_formatter=lambda examples, eos_token: [
             f"Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n"
@@ -488,7 +482,7 @@ def _train_model(config: str):
 
 
 @app.function(
-    image=TRAINER_IMAGE.add_local_dir("scripts", "/root/scripts"),
+    image=TRAINER_IMAGE.add_local_dir("../scripts", "/root/scripts"),
     gpu="L40S",  # fine for fine tuning?
     timeout=60 * 60 * 10,  # 10 hour timeout
     scaledown_window=60 * 10,  # 10 minute idle timeout
