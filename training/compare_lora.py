@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 
 app = modal.App(
-    "conors-inference-app",
+    "compare-lora-app",
     secrets=[
         modal.Secret.from_name("huggingface-secret-conor"),
     ],

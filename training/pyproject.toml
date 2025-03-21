@@ -1,7 +1,7 @@
 [project]
-name = "traininghacking-conor"
+name = "modal-llm-training"
 version = "0.1.0"
-description = "Add your description here"
+description = "Tools for training in Modal"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
