@@ -1,0 +1,19 @@
+[project]
+name = "traininghacking-conor"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "datasets>=3.4.1",
+    "huggingface-hub>=0.29.3",
+    "ipykernel>=6.29.5",
+    "ipywidgets>=8.1.5",
+    "modal>=0.73.112",
+    "peft>=0.14.0",
+    "transformers>=4.49.0",
+    "trl>=0.15.2",
+    "wandb>=0.19.8",
+    "pyyaml>=6.0.1",
+    "torch>=2.6.0",
+]
