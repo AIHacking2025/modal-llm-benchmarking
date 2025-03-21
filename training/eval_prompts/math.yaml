@@ -1,0 +1,70 @@
+prompts:
+  - |
+    Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+    ### Instruction
+    A train leaves Chicago traveling west at 60 mph. Another train leaves Denver, 1000 miles away, traveling east at 70 mph. How many hours will it take for the trains to meet?
+
+    ### Response
+
+  - |
+    ### Instruction
+    Maria invested $5000 in an account with 4% annual interest compounded monthly. How much money will she have after 3 years?
+
+    ### Response
+
+  - |
+    Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+    ### Instruction
+    A factory produces widgets at a rate of 120 per hour. If there is a 5% defect rate, how many non-defective widgets can be produced in an 8-hour shift?
+
+    ### Response
+
+  - |
+    ### Instruction
+    Carlos bought a house for $325,000 and sold it 5 years later for $392,000. What was his average annual percentage gain?
+
+    ### Response
+
+  - |
+    Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+    ### Instruction
+    A rectangular garden is 12 feet wide and 18 feet long. Alex wants to place a border of flowers around it, with the flowers being 2 feet wide. What is the area of the flower border in square feet?
+
+    ### Response
+
+  - |
+    ### Instruction
+    Three friends split a dinner bill of $84, including a 20% tip. How much did each person pay if they divided it equally?
+
+    ### Response
+
+  - |
+    Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+    ### Instruction
+    The ratio of cats to dogs at an animal shelter is 3:5. If there are 40 animals total, how many cats are at the shelter?
+
+    ### Response
+
+  - |
+    ### Instruction
+    Lin's age is 3 times her daughter's age. In 12 years, Lin's age will be twice her daughter's age. How old is Lin now?
+
+    ### Response
+
+  - |
+    Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+    ### Instruction
+    A water tank is 2/3 full. When 20 gallons are added, it becomes 3/4 full. What is the total capacity of the tank in gallons?
+
+    ### Response
+
+  - |
+    ### Instruction
+    Jamal can complete a project in 10 days working alone. Sofia can complete the same project in 15 days working alone. How many days would it take them to complete the project if they work together?
+
+    ### Response

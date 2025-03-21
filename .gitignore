@@ -173,6 +173,13 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Emails script
+scripts/*.pickle
+scripts/*.csv
+
 # Project specific
 models/
 results/
+wandb
+model_outputs
+

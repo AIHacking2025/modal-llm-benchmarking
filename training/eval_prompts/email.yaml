@@ -1,0 +1,81 @@
+prompts:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: hiring.manager@techcorp.com
+
+    Subject: Application for Senior Software Engineer Position
+
+    Body:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: team@startup.com
+
+    Subject: Project Status Update - Q2 2024
+
+    Body:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: client.support@company.com
+
+    Subject: Request for Technical Assistance
+
+    Body:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: conference.organizer@tech-events.com
+
+    Subject: Speaking Opportunity at DevCon 2024
+
+    Body:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: hr@corporation.com
+
+    Subject: Two Weeks Notice - Resignation
+
+    Body:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: marketing.team@company.com
+
+    Subject: New Product Launch Campaign Proposal
+
+    Body:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: investors@venture.capital.com
+
+    Subject: Quarterly Investment Performance Report
+
+    Body:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: customer.feedback@product.com
+
+    Subject: Response to Your Recent Review
+
+    Body:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: team.lead@project.org
+
+    Subject: Request for Extended Deadline
+
+    Body:
+  - |
+    Write an email to the following recipient and subject:
+
+    Recipient: partnership@business.com
+
+    Subject: Potential Collaboration Opportunity
+
+    Body:
