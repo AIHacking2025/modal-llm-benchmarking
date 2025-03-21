@@ -174,9 +174,8 @@ cython_debug/
 .pypirc
 
 # Emails script
-training/scripts/*.pkl
-training/scripts/*.pickle
-training/scripts/*.csv
+scripts/*.pickle
+scripts/*.csv
 
 # Project specific
 models/

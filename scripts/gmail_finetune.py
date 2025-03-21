@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
-# uv venv
-# source .venv/bin/activate
-# uv pip install google-api-python-client google-auth-oauthlib pandas
-import os
-import base64
-import pickle
+
+"""
+This script is used to fetch and transform emails from Gmail into a structured format that can be
+used for finetuning a model. See the README for more details on how to use it.
+
+There's some additional dependency setup required:
+
+    uv pip install google-api-python-client google-auth-oauthlib pandas
+"""
 import argparse
+import base64
+import os
+import pickle
+import re
+
+# project
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 import pandas as pd
-import re
 
 # Define the scopes
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
@@ -54,7 +62,6 @@ def fetch_raw_emails(service, max_results=5000):
     total_fetched = 0
 
     while total_fetched < max_results:
-        # Request messages with pagination
         results = (
             service.users()
             .messages()
@@ -84,7 +91,6 @@ def fetch_raw_emails(service, max_results=5000):
             if (total_fetched) % 50 == 0:
                 print(f"Fetched {total_fetched} emails...")
 
-        # Get the next page token
         next_page_token = results.get("nextPageToken")
         if not next_page_token:
             break
@@ -173,7 +179,6 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Gmail email processing toolkit")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # Fetch command
     fetch_parser = subparsers.add_parser("fetch", help="Fetch raw emails from Gmail")
     fetch_parser.add_argument(
         "--creds", required=True, help="Path to the credentials.json file"
@@ -185,31 +190,27 @@ def parse_arguments():
         help="Maximum number of emails to fetch",
     )
     fetch_parser.add_argument(
-        "--outfile", default="raw_emails.pkl", help="Output file for raw emails"
+        "--outfile", default="raw_emails.pickle", help="Output file for raw emails"
     )
 
-    # Transform command
     transform_parser = subparsers.add_parser(
         "transform", help="Transform raw emails into structured data"
     )
     transform_parser.add_argument(
-        "--infile", default="raw_emails.pkl", help="Input raw emails file"
+        "--infile", default="raw_emails.pickle", help="Input raw emails file"
     )
     transform_parser.add_argument(
         "--outfile",
         default="transformed_emails.csv",
         help="Output file for transformed emails",
     )
-
     return parser.parse_args()
 
 
 def main():
     """Main function to process emails based on command"""
     args = parse_arguments()
-
     commands = {"fetch": cmd_fetch, "transform": cmd_transform}
-
     commands[args.command](args)
 
 
