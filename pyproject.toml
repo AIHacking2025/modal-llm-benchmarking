@@ -11,6 +11,7 @@ dependencies = [
     "modal>=0.73.112",
     "peft>=0.14.0",
     "python-dotenv>=1.0.1",
+    "requests>=2.32.3",
     "safetensors>=0.5.3",
     "torch>=2.6.0",
     "transformers>=4.49.0",
